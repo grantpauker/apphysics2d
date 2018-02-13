@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+#Scons
+*.dblite
+
+#VScode
+.vscode
