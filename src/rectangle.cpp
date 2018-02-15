@@ -18,8 +18,9 @@ Rectangle2D::Rectangle2D(b2World &world, sf::Vector2f pos, sf::Vector2f size, fl
 	body_data->body_type = RECTANGLE;
 	body->SetUserData((void *)body_data);
 	shape.SetAsBox((size.x / 2) / SCALE, (size.y / 2) / SCALE);
-	fix_def.density = 1.f;
-	fix_def.restitution = 1.f;
+	fix_def.density = density;
+	fix_def.friction = friction;
+	fix_def.restitution = restitution;
 	fix_def.shape = &shape;
 	body->CreateFixture(&fix_def);
 }

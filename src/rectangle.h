@@ -12,7 +12,7 @@ TODO
 */
 class Rectangle2D : public Shape2D, public sf::RectangleShape
 {
-  public:
+public:
 	// void setFillColor(const sf::Color &color);
 	// void setOutlineColor(const sf::Color &color);
 	// void setOutlineThickness(float thickness);
@@ -30,10 +30,10 @@ class Rectangle2D : public Shape2D, public sf::RectangleShape
 
 	BodyData *body_data = 0;
 
-  protected:
+protected:
 	const float SCALE = 30.f;
 
-  private:
+private:
 	sf::Vector2f pos;
 	sf::Vector2f size;
 
