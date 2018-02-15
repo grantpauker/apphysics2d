@@ -7,6 +7,7 @@
 #include "src/viewport.h"
 #include "src/shape.h"
 #include "src/body_data.h"
+#include "src/collision_handler.h"
 
 using namespace std;
 
@@ -16,66 +17,24 @@ const static float SCALE_TEMP = 30.f;
 void CreateGround(b2World &world);
 
 void CreateWalls(b2World &world);
-class MyContactListener : public b2ContactListener
-{
-	void BeginContact(b2Contact *contact)
-	{
 
-		void *bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-		void *bodyUserData2 = contact->GetFixtureB()->GetBody()->GetUserData();
-		if (bodyUserData && bodyUserData2)
-		{
-			int id1 = static_cast<BodyData *>(contact->GetFixtureA()->GetBody()->GetUserData())->id;
-			int id2 = static_cast<BodyData *>(contact->GetFixtureB()->GetBody()->GetUserData())->id;
-
-			static_cast<BodyData *>(bodyUserData)->collisionStart(id2);
-			static_cast<BodyData *>(bodyUserData2)->collisionStart(id1);
-		}
-		// if (bodyUserData)
-		// {
-		// 	int other_id = static_cast<BodyData *>(contact->GetFixtureA()->GetBody()->GetUserData())->id;
-		// 	std::cout << "start_id: " << static_cast<BodyData *>(bodyUserData)->id << endl;
-		// 	static_cast<BodyData *>(bodyUserData)->collisionStart(other_id);
-		// }
-	}
-
-	void EndContact(b2Contact *contact)
-	{
-		void *bodyUserData = contact->GetFixtureA()->GetBody()->GetUserData();
-		void *bodyUserData2 = contact->GetFixtureB()->GetBody()->GetUserData();
-		if (bodyUserData && bodyUserData2)
-		{
-			int id1 = static_cast<BodyData *>(contact->GetFixtureA()->GetBody()->GetUserData())->id;
-			int id2 = static_cast<BodyData *>(contact->GetFixtureB()->GetBody()->GetUserData())->id;
-
-			static_cast<BodyData *>(bodyUserData)->collisionEnd(id2);
-			static_cast<BodyData *>(bodyUserData2)->collisionEnd(id1);
-		}
-		// if (bodyUserData)
-		// {
-		// 	int other_id = static_cast<BodyData *>(contact->GetFixtureA()->GetBody()->GetUserData())->id;
-		// 	std::cout << "end_id: " << static_cast<BodyData *>(bodyUserData)->id << endl;
-		// 	static_cast<BodyData *>(bodyUserData)->collisionEnd(other_id);
-		// }
-	}
-};
 int main()
 {
 	Viewport2D viewport(sf::Vector2f(WIDTH, HEIGHT), sf::Vector2f(0.f, 9.8f), 60);
 
-	Rectangle2D dog(viewport.world, sf::Vector2f(10, 0), sf::Vector2f(20, 20), 0.f, 0.f, 0.f);
+	Rectangle2D dog(viewport.world, sf::Vector2f(10, 0), sf::Vector2f(20, 20), 1.f, 0.5f, 0.9f);
 	dog.setOrigin(dog.getSize().x / 2, dog.getSize().y / 2);
 	dog.setFillColor(sf::Color(255, 0, 0, 128));
 	dog.setOutlineColor(sf::Color(255, 0, 0));
 	dog.setOutlineThickness(1);
 
-	Rectangle2D dog2(viewport.world, sf::Vector2f(100, 0), sf::Vector2f(100, 100), 0.f, 0.f, 0.f);
+	Rectangle2D dog2(viewport.world, sf::Vector2f(100, 0), sf::Vector2f(100, 100), 1.f, 0.5f, 0.9f);
 	dog2.setOrigin(dog2.getSize().x / 2, dog2.getSize().y / 2);
 	dog2.setFillColor(sf::Color(0, 255, 0, 128));
 	dog2.setOutlineColor(sf::Color(0, 255, 0));
 	dog2.setOutlineThickness(1);
 
-	Rectangle2D dog3(viewport.world, sf::Vector2f(500, 0), sf::Vector2f(20, 20), 0.f, 0.f, 0.f);
+	Rectangle2D dog3(viewport.world, sf::Vector2f(500, 0), sf::Vector2f(20, 20), 1.f, 0.5f, 0.9f);
 	dog3.setOrigin(dog3.getSize().x / 2, dog3.getSize().y / 2);
 	dog3.setFillColor(sf::Color(0, 0, 255, 128));
 	dog3.setOutlineColor(sf::Color(0, 0, 255));
@@ -88,8 +47,7 @@ int main()
 	CreateGround(viewport.world);
 	CreateWalls(viewport.world);
 	sf::Clock clock;
-	MyContactListener myContactListenerInstance;
-	viewport.world.SetContactListener(&myContactListenerInstance);
+
 	while (viewport.window.isOpen())
 	{
 		sf::Time time = clock.getElapsedTime();
@@ -170,8 +128,7 @@ void CreateWalls(b2World &world)
 	fix_def.shape = &Shape;
 	Body->CreateFixture(&fix_def);
 
-	BodyDef;
-	BodyDef.position = b2Vec2(WIDTH / SCALE_TEMP, 0);
+	BodyDef.position = b2Vec2(0, 0);
 	BodyDef.type = b2_staticBody;
 	Body = world.CreateBody(&BodyDef);
 
