@@ -4,7 +4,7 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-enum bodyType
+enum shapeType
 {
 	RECTANGLE,
 	CIRCLE,
@@ -12,8 +12,8 @@ enum bodyType
 };
 class BodyData
 {
-  public:
-	bodyType body_type;
+public:
+	shapeType body_type;
 	int id;
 	std::vector<int> collisions;
 	BodyData();
@@ -23,7 +23,7 @@ class BodyData
 	void collisionStart(int _id);
 	void collisionEnd(int _id);
 
-  private:
+private:
 	static int nextID;
 };
 #endif
