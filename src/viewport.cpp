@@ -14,11 +14,11 @@ Viewport2D::Viewport2D(sf::Vector2f size, sf::Vector2f gravity, unsigned int fps
 }
 void Viewport2D::addPhysicsBody(Shape2D *shape)
 {
-	body_list.push_back(shape);
+	physics_bodies.push_back(shape);
 }
 void Viewport2D::updatePhysicsBody()
 {
-	for (std::vector<Shape2D *>::iterator it = body_list.begin(); it != body_list.end(); ++it)
+	for (std::vector<Shape2D *>::iterator it = physics_bodies.begin(); it != physics_bodies.end(); ++it)
 	{
 		(*it)->updatePhysics();
 	}

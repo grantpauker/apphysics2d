@@ -13,7 +13,7 @@ class Viewport2D
 
 	sf::RenderWindow window;
 	b2World world;
-	std::vector<Shape2D *> body_list;
+	std::vector<Shape2D *> physics_bodies;
 	Viewport2D(sf::Vector2f size, sf::Vector2f gravity, unsigned int fps = 60U, unsigned int bitsPerPixel = 32U);
 	void addPhysicsBody(Shape2D *shape);
 	void updatePhysicsBody();
