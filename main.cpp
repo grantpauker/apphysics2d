@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Time.hpp>
+#include <ctime>
+#include <chrono>
 
 #include <Box2D/Box2D.h>
 #include "src/rectangle.h"
@@ -8,43 +10,42 @@
 #include "src/shape.h"
 #include "src/body_data.h"
 #include "src/collision_handler.h"
+#include "src/utils.h"
 
 using namespace std;
 
 #define WIDTH 800
+#define private punbl
 #define HEIGHT 800
-const static float SCALE_TEMP = 30.f;
-void CreateGround(b2World &world);
+#define NOW() std::chrono::high_resolution_clock::now()
+#define START() std::chrono::high_resolution_clock::time_point start = NOW()
+#define END() std::cout << "time: " << (float)std::chrono::duration_cast<std::chrono::microseconds>(NOW() - start).count() / 1000 << std::endl
 
+const static float SCALE_TEMP = 30.f;
+// void CreateGround(b2World &world);
 void CreateWalls(b2World &world);
 
 int main()
 {
+	srand(time(NULL));
 	Viewport2D viewport(sf::Vector2f(WIDTH, HEIGHT), sf::Vector2f(0.f, 9.8f), 60);
 
-	Rectangle2D dog(viewport.world, sf::Vector2f(10, 0), sf::Vector2f(20, 20), 1.f, 0.5f, 0.9f);
+	Rectangle2D dog(viewport.world, dynamic2D, sf::Vector2f(300, 100), sf::Vector2f(20, 20), 1.f, 0.5f, 0.9f);
+
+	Rectangle2D ground(viewport.world, static2D, sf::Vector2f(WIDTH/2, HEIGHT), sf::Vector2f(WIDTH, 50), 1.f, 0.5f, 0.9f);
+
 	dog.setOrigin(dog.getSize().x / 2, dog.getSize().y / 2);
 	dog.setFillColor(sf::Color(255, 0, 0, 128));
 	dog.setOutlineColor(sf::Color(255, 0, 0));
 	dog.setOutlineThickness(1);
-
-	Rectangle2D dog2(viewport.world, sf::Vector2f(100, 0), sf::Vector2f(100, 100), 1.f, 0.5f, 0.9f);
-	dog2.setOrigin(dog2.getSize().x / 2, dog2.getSize().y / 2);
-	dog2.setFillColor(sf::Color(0, 255, 0, 128));
-	dog2.setOutlineColor(sf::Color(0, 255, 0));
-	dog2.setOutlineThickness(1);
-
-	Rectangle2D dog3(viewport.world, sf::Vector2f(500, 0), sf::Vector2f(20, 20), 1.f, 0.5f, 0.9f);
-	dog3.setOrigin(dog3.getSize().x / 2, dog3.getSize().y / 2);
-	dog3.setFillColor(sf::Color(0, 0, 255, 128));
-	dog3.setOutlineColor(sf::Color(0, 0, 255));
-	dog3.setOutlineThickness(1);
-
 	viewport.addPhysicsBody(&dog);
-	viewport.addPhysicsBody(&dog2);
-	viewport.addPhysicsBody(&dog3);
 
-	CreateGround(viewport.world);
+	ground.setOrigin(ground.getSize().x / 2, ground.getSize().y / 2);
+	ground.setFillColor(sf::Color(255, 0, 0, 128));
+	ground.setOutlineColor(sf::Color(255, 0, 0));
+	ground.setOutlineThickness(1);
+	viewport.addPhysicsBody(&ground);
+
 	CreateWalls(viewport.world);
 	sf::Clock clock;
 
@@ -54,10 +55,9 @@ int main()
 		float seconds = time.asSeconds();
 		// cout << seconds << endl;
 
-		if (seconds > 2.9 && seconds < 3.1)
+		if (seconds > 1.9 && seconds < 2.1)
 		{
 			dog.getBody()->SetLinearVelocity(b2Vec2(10.f, dog.getBody()->GetLinearVelocity().y));
-			// cout << "hey\n";
 		}
 
 		sf::Event event;
@@ -85,34 +85,20 @@ int main()
 
 		viewport.window.clear(sf::Color::White);
 		viewport.updatePhysicsBody();
-		viewport.window.draw(dog3);
 		viewport.window.draw(dog);
-		viewport.window.draw(dog2);
+		viewport.window.draw(ground);
 
 		viewport.window.display();
-		if (dog.isCollision())
-		{
-			cout << "Collision\n";
-		}
+		// START();
+		// // if (dog.isCollision())
+		// // {
+		// // 	cout << "Collision\n";
+		// // }
+		// END();
 	}
 	return EXIT_SUCCESS;
 }
 
-void CreateGround(b2World &world)
-{
-	b2BodyDef BodyDef;
-	BodyDef.position = b2Vec2(0, (HEIGHT) / SCALE_TEMP);
-	BodyDef.type = b2_staticBody;
-	b2Body *Body = world.CreateBody(&BodyDef);
-
-	b2PolygonShape Shape;
-	Shape.SetAsBox(WIDTH / SCALE_TEMP, 1);
-	b2FixtureDef fix_def;
-	fix_def.density = 0.f;
-	fix_def.friction = 0.7f;
-	fix_def.shape = &Shape;
-	Body->CreateFixture(&fix_def);
-}
 void CreateWalls(b2World &world)
 {
 	b2BodyDef BodyDef;
