@@ -5,13 +5,24 @@
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
 
-Rectangle2D::Rectangle2D(b2World &world, sf::Vector2f pos, sf::Vector2f size, float density, float friction, float restitution)
+Rectangle2D::Rectangle2D(b2World &world, bodyType type, sf::Vector2f pos, sf::Vector2f size, float density, float friction, float restitution)
 	: pos(pos),
 	  size(size),
 	  sf::RectangleShape(sf::Vector2f(size.x, size.y))
 {
 	// rectangle = sf::RectangleShape(sf::Vector2f(size.x, size.y));
-	body_def.type = b2_dynamicBody;
+	switch (type)
+	{
+	case static2D:
+		body_def.type = b2_staticBody;
+		break;
+	case kinematic2D:
+		body_def.type = b2_kinematicBody;
+		break;
+	case dynamic2D:
+		body_def.type = b2_dynamicBody;
+		break;
+	}
 	body_def.position = b2Vec2(pos.x / SCALE, pos.y / SCALE);
 	body = world.CreateBody(&body_def);
 	body_data = new BodyData;

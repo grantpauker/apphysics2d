@@ -5,6 +5,7 @@
 #include <Box2D/Box2D.h>
 #include "shape.h"
 #include "body_data.h"
+#include "utils.h"
 
 /*
 TODO
@@ -19,7 +20,7 @@ public:
 	// void setTexture(const sf::Texture *texture, bool resetRect = false);
 	// void setTextureRect(const sf::IntRect &rect);
 
-	Rectangle2D(b2World &world, sf::Vector2f _pos, sf::Vector2f _size, float density, float friction, float resitiution);
+	Rectangle2D(b2World &world, bodyType type, sf::Vector2f _pos, sf::Vector2f _size, float density, float friction, float resitiution);
 	void updatePhysics();
 	void setRestitution(float r);
 	sf::Vector2f getSize();
@@ -28,7 +29,7 @@ public:
 	bool isCollisionWith(Rectangle2D collider);
 	bool isCollision();
 
-	BodyData *body_data = 0;
+	BodyData *body_data;
 
 protected:
 	const float SCALE = 30.f;
@@ -37,7 +38,7 @@ private:
 	sf::Vector2f pos;
 	sf::Vector2f size;
 
-	b2Body *body;
+	b2Body *body;	
 	b2BodyDef body_def;
 	b2PolygonShape shape;
 	b2FixtureDef fix_def;
