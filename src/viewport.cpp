@@ -1,11 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
-#include "viewport.h"
-#include "shape.h"
-#include "collision_handler.h"
+#include "viewport.hpp"
+#include "shape.hpp"
+#include "collision_handler.hpp"
+#include "vector.hpp"
 
-
-Viewport2D::Viewport2D(sf::Vector2f size, sf::Vector2f gravity, unsigned int fps, unsigned int bitsPerPixel)
+Viewport2D::Viewport2D(VectorU2D size, VectorF2D gravity, unsigned int fps, unsigned int bitsPerPixel)
 	: window(sf::VideoMode(size.x, size.y, 32U), "AP Physics 2D"),
 	  world{b2World(b2Vec2(gravity.x, gravity.y))}
 {
@@ -22,4 +22,9 @@ void Viewport2D::updatePhysicsBody()
 	{
 		(*it)->updatePhysics();
 	}
+}
+
+void Viewport2D::draw(Shape2D *shape)
+{
+	window.draw(*shape->getShape());
 }
