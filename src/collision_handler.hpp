@@ -2,7 +2,7 @@
 #define H_COLLISION_HANDLE
 #include <iostream>
 #include <Box2D/Box2D.h>
-#include "body_data.h"
+#include "body_data.hpp"
 
 class CollisionHandler2D : public b2ContactListener
 {

@@ -7,5 +7,6 @@ class Shape2D
 {
   public:
 	virtual void updatePhysics() = 0;
+  virtual sf::Drawable* getShape() = 0;
 };
 #endif
