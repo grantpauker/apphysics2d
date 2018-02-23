@@ -5,12 +5,14 @@
 #include <chrono>
 
 #include <Box2D/Box2D.h>
-#include "src/rectangle.h"
-#include "src/viewport.h"
-#include "src/shape.h"
-#include "src/body_data.h"
-#include "src/collision_handler.h"
-#include "src/utils.h"
+#include "src/rectangle.hpp"
+#include "src/viewport.hpp"
+#include "src/shape.hpp"
+#include "src/body_data.hpp"
+#include "src/collision_handler.hpp"
+#include "src/utils.hpp"
+#include "src/color.hpp"
+#include "src/vector.hpp"
 
 using namespace std;
 
@@ -28,22 +30,21 @@ void CreateWalls(b2World &world);
 int main()
 {
 	srand(time(NULL));
-	Viewport2D viewport(sf::Vector2f(WIDTH, HEIGHT), sf::Vector2f(0.f, 9.8f), 60);
+	Viewport2D viewport(VectorU2D(WIDTH, HEIGHT), VectorF2D(0, 9.8), 60);
 
-	Rectangle2D dog(viewport.world, dynamic2D, sf::Vector2f(300, 100), sf::Vector2f(20, 20), 1.f, 0.5f, 0.9f);
+	Rectangle2D dog(viewport.world, dynamic2D, VectorF2D(300, 100), VectorF2D(20, 20), 1.f, 0.5f, 0.1f);
 
-	Rectangle2D ground(viewport.world, static2D, sf::Vector2f(WIDTH/2, HEIGHT), sf::Vector2f(WIDTH, 50), 1.f, 0.5f, 0.9f);
-
-	dog.setOrigin(dog.getSize().x / 2, dog.getSize().y / 2);
-	dog.setFillColor(sf::Color(255, 0, 0, 128));
-	dog.setOutlineColor(sf::Color(255, 0, 0));
-	dog.setOutlineThickness(1);
+	Rectangle2D ground(viewport.world, static2D, VectorF2D(WIDTH / 2, HEIGHT), VectorF2D(WIDTH, 50), 1.f, 0.5f, 0.9f);
+	dog.getRect_TEMP()->setOrigin(dog.getSize().x / 2, dog.getSize().y / 2);
+	dog.getRect_TEMP()->setFillColor(sf::Color(255, 0, 0, 128));
+	dog.getRect_TEMP()->setOutlineColor(sf::Color(255, 0, 0));
+	dog.getRect_TEMP()->setOutlineThickness(1);
 	viewport.addPhysicsBody(&dog);
 
-	ground.setOrigin(ground.getSize().x / 2, ground.getSize().y / 2);
-	ground.setFillColor(sf::Color(255, 0, 0, 128));
-	ground.setOutlineColor(sf::Color(255, 0, 0));
-	ground.setOutlineThickness(1);
+	ground.getRect_TEMP()->setOrigin(ground.getSize().x / 2, ground.getSize().y / 2);
+	ground.getRect_TEMP()->setFillColor(sf::Color(255, 0, 0, 128));
+	ground.getRect_TEMP()->setOutlineColor(sf::Color(255, 0, 0));
+	ground.getRect_TEMP()->setOutlineThickness(1);
 	viewport.addPhysicsBody(&ground);
 
 	CreateWalls(viewport.world);
@@ -57,7 +58,10 @@ int main()
 
 		if (seconds > 1.9 && seconds < 2.1)
 		{
-			dog.getBody()->SetLinearVelocity(b2Vec2(10.f, dog.getBody()->GetLinearVelocity().y));
+			// dog.getBody()->SetLinearVelocity(b2Vec2(10.f, dog.getBody()->GetLinearVelocity().y));
+			// dog.setSize(200, 200);
+			dog.getBody()->ApplyForce(b2Vec2(1090.f,0.f),b2Vec2(0.f,0.f), true);
+			cout << "hey\n";
 		}
 
 		sf::Event event;
@@ -85,8 +89,11 @@ int main()
 
 		viewport.window.clear(sf::Color::White);
 		viewport.updatePhysicsBody();
-		viewport.window.draw(dog);
-		viewport.window.draw(ground);
+		viewport.draw(&dog);
+		// cout << ground.getRect_TEMP().getSize().x << "	" << ground.getRect_TEMP().getSize().y << endl;
+		// cout << ground.getRect_TEMP().getPosition().x << "	" << ground.getRect_TEMP().getPosition().y << endl;
+		// cout << (int)ground.getRect_TEMP().getFillColor().r<<  endl;
+		viewport.draw(&ground);
 
 		viewport.window.display();
 		// START();
