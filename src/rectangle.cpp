@@ -1,16 +1,18 @@
-#include "shape.h"
-#include "rectangle.h"
-#include "viewport.h"
-#include "body_data.h"
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
+#include "shape.hpp"
+#include "rectangle.hpp"
+#include "viewport.hpp"
+#include "body_data.hpp"
+#include "vector.hpp"
 
-Rectangle2D::Rectangle2D(b2World &world, bodyType type, sf::Vector2f pos, sf::Vector2f size, float density, float friction, float restitution)
+Rectangle2D::Rectangle2D(b2World &world, bodyType type, VectorF2D pos, VectorF2D size, float density, float friction, float restitution)
 	: pos(pos),
 	  size(size),
-	  sf::RectangleShape(sf::Vector2f(size.x, size.y))
+	  rectangle(sf::Vector2f(size.x, size.y))
 {
 	// rectangle = sf::RectangleShape(sf::Vector2f(size.x, size.y));
+
 	switch (type)
 	{
 	case static2D:
@@ -33,7 +35,23 @@ Rectangle2D::Rectangle2D(b2World &world, bodyType type, sf::Vector2f pos, sf::Ve
 	fix_def.friction = friction;
 	fix_def.restitution = restitution;
 	fix_def.shape = &shape;
-	body->CreateFixture(&fix_def);
+	fixture = body->CreateFixture(&fix_def);
+}
+sf::Drawable *Rectangle2D::getShape()
+{
+	return &rectangle;
+}
+sf::RectangleShape *Rectangle2D::getRect_TEMP()
+{
+	return &rectangle;
+}
+void Rectangle2D::setSize(float x, float y)
+{
+	body->DestroyFixture(fixture);
+	shape.SetAsBox(y / SCALE, x / SCALE);
+	fix_def.shape = &shape;
+	fixture = body->CreateFixture(&fix_def);
+	rectangle.setSize(sf::Vector2f(x, y));
 }
 void Rectangle2D::setRestitution(float r)
 {
@@ -43,19 +61,12 @@ void Rectangle2D::setRestitution(float r)
 }
 void Rectangle2D::updatePhysics()
 {
-	setPosition(SCALE * body->GetPosition().x, SCALE * body->GetPosition().y);
-	setRotation(body->GetAngle() * 180 / b2_pi);
+	rectangle.setPosition(SCALE * body->GetPosition().x, SCALE * body->GetPosition().y);
+	rectangle.setRotation(body->GetAngle() * 180 / b2_pi);
 }
-sf::Vector2f Rectangle2D::getSize()
-{
-	return size;
-}
-sf::Vector2f Rectangle2D::getPosition()
-{
-	b2Vec2 position = body->GetPosition();
-	position *= SCALE;
-	return sf::Vector2f(position.x, position.y);
-}
+
+
+
 b2Body *Rectangle2D::getBody()
 {
 	return body;
@@ -68,6 +79,7 @@ bool Rectangle2D::isCollision()
 {
 	return !(body_data->collisions.empty());
 }
+
 // void Rectangle2D::setFillColor(const sf::Color &color)
 // {
 // 	rectangle.setFillColor(color);
