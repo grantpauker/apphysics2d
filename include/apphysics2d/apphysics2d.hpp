@@ -8,4 +8,6 @@
 #include "utils.hpp"
 #include "color.hpp"
 #include "vector.hpp"
+#include "transform.hpp"
+
 #endif
