@@ -1,6 +1,7 @@
 #include <Box2D/Box2D.h>
-#include "collision_handler.hpp"
-#include "body_data.hpp"
+#include "apphysics2d/collision_handler.hpp"
+#include "apphysics2d/body_data.hpp"
+
 
 
 void CollisionHandler2D::BeginContact(b2Contact *contact)
