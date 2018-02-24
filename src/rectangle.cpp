@@ -1,10 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
-#include "shape.hpp"
-#include "rectangle.hpp"
-#include "viewport.hpp"
-#include "body_data.hpp"
-#include "vector.hpp"
+#include "apphysics2d/shape.hpp"
+#include "apphysics2d/rectangle.hpp"
+#include "apphysics2d/viewport.hpp"
+#include "apphysics2d/body_data.hpp"
+#include "apphysics2d/vector.hpp"
 
 Rectangle2D::Rectangle2D(b2World &world, bodyType type, VectorF2D pos, VectorF2D size, float density, float friction, float restitution)
 	: pos(pos),
@@ -25,6 +25,8 @@ Rectangle2D::Rectangle2D(b2World &world, bodyType type, VectorF2D pos, VectorF2D
 		body_def.type = b2_dynamicBody;
 		break;
 	}
+
+	
 	body_def.position = b2Vec2(pos.x / SCALE, pos.y / SCALE);
 	body = world.CreateBody(&body_def);
 	body_data = new BodyData;
@@ -45,14 +47,7 @@ sf::RectangleShape *Rectangle2D::getRect_TEMP()
 {
 	return &rectangle;
 }
-void Rectangle2D::setSize(float x, float y)
-{
-	body->DestroyFixture(fixture);
-	shape.SetAsBox(y / SCALE, x / SCALE);
-	fix_def.shape = &shape;
-	fixture = body->CreateFixture(&fix_def);
-	rectangle.setSize(sf::Vector2f(x, y));
-}
+
 void Rectangle2D::setRestitution(float r)
 {
 	// fix_def.restitution = r;
