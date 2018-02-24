@@ -2,6 +2,8 @@
 #define H_VECTOR
 #include <cmath>
 #include <SFML/Graphics.hpp>
+#include <Box2D/Box2D.h>
+
 template <class T>
 class Vector2D
 {
@@ -12,6 +14,7 @@ public:
   Vector2D(T x, T y) : x(x), y(y) {}
   Vector2D(const Vector2D &v) : x(v.x), y(v.y) {}
   Vector2D(sf::Vector2<T> v) : x(v.x), y(v.y) {}
+  Vector2D(b2Vec2 v) : x(v.x), y(v.y) {}
 
   Vector2D &operator=(const Vector2D &v)
   {

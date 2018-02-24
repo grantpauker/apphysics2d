@@ -42,6 +42,12 @@ class Rectangle2D : public Shape2D
 	{
 		rectangle.setOutlineThickness(thickness);
 	}
+	void setVisualProperties(Color2D f_color, Color2D o_color, float o_thickness)
+	{
+		setFillColor(f_color);
+		setOutlineColor(o_color);
+		setOutlineThickness(o_thickness);
+	}
 	// const Texture * 	getTexture () const
 	// const IntRect & 	getTextureRect () const
 	Color2D getFillColor()
@@ -62,7 +68,16 @@ class Rectangle2D : public Shape2D
 	// void 	setPosition (float x, float y)
 	// void 	setPosition (const Vector2f &position)
 	// void 	setRotation (float angle)
-	void setSize(float x, float y);
+	void setSize(float x, float y)
+	{
+		body->DestroyFixture(fixture);
+		shape.SetAsBox((x / 2) / SCALE, (y / 2) / SCALE);
+		fix_def.shape = &shape;
+		fixture = body->CreateFixture(&fix_def);
+		sf::Vector2f new_size = sf::Vector2f(x, y);
+		rectangle.setSize(new_size);
+		rectangle.setOrigin(new_size.x / 2.f, new_size.y / 2.f);
+	}
 	void setOrigin(float x, float y)
 	{
 		rectangle.setOrigin(x, y);
@@ -77,14 +92,15 @@ class Rectangle2D : public Shape2D
 	// float 	getRotation () const
 	VectorF2D getSize()
 	{
-		return size;
+		return rectangle.getSize();
 	}
-	// const Vector2f & 	getOrigin () const
+	VectorF2D getOrigin()
+	{
+		return VectorF2D(rectangle.getOrigin());
+	}
 	// void 	move (float offsetX, float offsetY)
 	// void 	move (const Vector2f &offset)
 	// void 	rotate (float angle)
-	// void 	scale (float factorX, float factorY)
-	// void 	scale (const Vector2f &factor)
 	// const Transform & 	getTransform () const
 	// const Transform & 	getInverseTransform () const
 	BodyData *body_data;
@@ -95,6 +111,7 @@ class Rectangle2D : public Shape2D
   private:
 	VectorF2D pos;
 	VectorF2D size;
+
 	sf::RectangleShape rectangle;
 
 	b2Body *body;
