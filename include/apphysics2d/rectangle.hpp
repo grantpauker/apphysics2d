@@ -8,7 +8,15 @@
 #include "utils.hpp"
 #include "vector.hpp"
 #include "color.hpp"
-//DO SET_SCALE
+#include "transform.hpp"
+
+/*
+DO
+ -MOVE
+ -SCALE
+ -ROTATE
+ -TEXTURES
+*/
 class Rectangle2D : public Shape2D
 {
   public:
@@ -65,9 +73,6 @@ class Rectangle2D : public Shape2D
 	}
 	// FloatRect 	getLocalBounds () const
 	// FloatRect 	getGlobalBounds () const
-	// void 	setPosition (float x, float y)
-	// void 	setPosition (const Vector2f &position)
-	// void 	setRotation (float angle)
 	void setSize(float x, float y)
 	{
 		body->DestroyFixture(fixture);
@@ -78,9 +83,10 @@ class Rectangle2D : public Shape2D
 		rectangle.setSize(new_size);
 		rectangle.setOrigin(new_size.x / 2.f, new_size.y / 2.f);
 	}
-	void setOrigin(float x, float y)
+	void setOrigin(VectorF2D origin)
 	{
-		rectangle.setOrigin(x, y);
+
+		rectangle.setOrigin(origin.getSFVector());
 	}
 
 	VectorF2D getPosition()
@@ -98,9 +104,35 @@ class Rectangle2D : public Shape2D
 	{
 		return VectorF2D(rectangle.getOrigin());
 	}
-	// void 	move (float offsetX, float offsetY)
-	// void 	move (const Vector2f &offset)
-	// void 	rotate (float angle)
+
+	void setTransform(VectorF2D origin, float angle)
+	{
+		origin /= SCALE;
+		body->SetTransform(b2Vec2(origin.x, origin.y), angle * b2_pi / 180);
+	}
+	void setTransform(Transform2D trans)
+	{
+		body->SetTransform(b2Vec2(trans.pos.x, trans.pos.y), trans.rot);
+	}
+
+//FIX CONVERSIONS IN THE 2 BELOW
+	void addTransform(VectorF2D origin, float angle)
+	{
+		origin /= SCALE;
+		addTransform(Transform2D(origin, angle));
+	}
+	void addTransform(Transform2D trans)
+	{
+		Transform2D cur(body->GetTransform());
+		trans += cur;
+		body->SetTransform(b2Vec2(trans.pos.x, trans.pos.y), trans.rot);
+	}
+
+	Transform2D getTransform()
+	{
+		return Transform2D(body->GetTransform());
+	}
+
 	// const Transform & 	getTransform () const
 	// const Transform & 	getInverseTransform () const
 	BodyData *body_data;
