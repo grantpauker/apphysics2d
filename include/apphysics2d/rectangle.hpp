@@ -115,11 +115,12 @@ class Rectangle2D : public Shape2D
 		body->SetTransform(b2Vec2(trans.pos.x, trans.pos.y), trans.rot);
 	}
 
-//FIX CONVERSIONS IN THE 2 BELOW
+	//FIX CONVERSIONS IN THE 2 BELOW
 	void addTransform(VectorF2D origin, float angle)
 	{
 		origin /= SCALE;
-		addTransform(Transform2D(origin, angle));
+		addTransform(Transform2D(origin, angle * b2_pi / 180));
+		std::cout << "hey" << std::endl;
 	}
 	void addTransform(Transform2D trans)
 	{
