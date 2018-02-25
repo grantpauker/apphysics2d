@@ -1,0 +1,2 @@
+source_stuff = Environment(LIBS= ['Box2D', 'sfml-graphics', 'sfml-window', 'sfml-audio', 'sfml-network', 'sfml-system','apphysics2d'])
+program = source_stuff.Program('a.out', 'main.cpp')

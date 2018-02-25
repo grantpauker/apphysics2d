@@ -52,7 +52,7 @@ int main()
 		if (frame_count == 60)
 		{
 			cout << "start: " << dog.getTransform().pos.x << endl;
-			dog.addTransform(VectorF2D(WIDTH / 2 / 30, 0), 0);
+			dog.addTransform(VectorF2D(0, 0), 45);
 		}
 		// cout << dog.getOrigin().x << endl;
 		sf::Event event;
